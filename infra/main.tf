@@ -24,7 +24,7 @@ module "entraObjects" {
   source                            = "./core/aad"
   isInAutomation                    = var.isInAutomation
   requireWebsiteSecurityMembership  = var.requireWebsiteSecurityMembership
-  randomString                      = random_string.random.result
+  randomString                      = var.randostring
   azure_websites_domain             = var.azure_websites_domain
   aadWebClientId                    = var.aadWebClientId
   aadMgmtClientId                   = var.aadMgmtClientId
@@ -38,8 +38,8 @@ module "entraObjects" {
 module "logging" {
   source = "./core/logging/loganalytics"
 
-  logAnalyticsName        = var.logAnalyticsName != "" ? var.logAnalyticsName : "infoasst-la-${random_string.random.result}"
-  applicationInsightsName = var.applicationInsightsName != "" ? var.applicationInsightsName : "infoasst-ai-${random_string.random.result}"
+  logAnalyticsName        = var.logAnalyticsName != "" ? var.logAnalyticsName : "infoasst-la-${var.randostring}"
+  applicationInsightsName = var.applicationInsightsName != "" ? var.applicationInsightsName : "infoasst-ai-${var.randostring}"
   location                = var.location
   tags                    = local.tags
   skuName                 = "PerGB2018"
@@ -48,7 +48,7 @@ module "logging" {
 
 module "storage" {
   source                = "./core/storage"
-  name                  = var.storageAccountName != "" ? var.storageAccountName : "infoasststore${random_string.random.result}"
+  name                  = var.storageAccountName != "" ? var.storageAccountName : "infoasststore${var.randostring}"
   location              = var.location
   tags                  = local.tags
   accessTier            = "Hot"
@@ -68,8 +68,8 @@ module "storage" {
 
 module "enrichmentApp" {
   source                                    = "./core/host/enrichmentapp"
-  name                                      = var.enrichmentServiceName != "" ? var.enrichmentServiceName : "infoasst-enrichmentweb-${random_string.random.result}"
-  plan_name                                 = var.enrichmentAppServicePlanName != "" ? var.enrichmentAppServicePlanName : "infoasst-enrichmentasp-${random_string.random.result}"
+  name                                      = var.enrichmentServiceName != "" ? var.enrichmentServiceName : "infoasst-enrichmentweb-${var.randostring}"
+  plan_name                                 = var.enrichmentAppServicePlanName != "" ? var.enrichmentAppServicePlanName : "infoasst-enrichmentasp-${var.randostring}"
   location                                  = var.location 
   tags                                      = local.tags
   sku = {
@@ -119,8 +119,8 @@ module "enrichmentApp" {
 # // The application frontend
 module "backend" {
   source                              = "./core/host/webapp"
-  name                                = var.backendServiceName != "" ? var.backendServiceName : "infoasst-web-${random_string.random.result}"
-  plan_name                           = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-asp-${random_string.random.result}"
+  name                                = var.backendServiceName != "" ? var.backendServiceName : "infoasst-web-${var.randostring}"
+  plan_name                           = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-asp-${var.randostring}"
   sku = {
     tier                              = var.appServiceSkuTier
     size                              = var.appServiceSkuSize
@@ -192,7 +192,7 @@ module "backend" {
 
 module "openaiServices" {
   source = "./core/ai/openaiservices"
-  name     = var.openAIServiceName != "" ? var.openAIServiceName : "infoasst-aoai-${random_string.random.result}"
+  name     = var.openAIServiceName != "" ? var.openAIServiceName : "infoasst-aoai-${var.randostring}"
   location = var.location
   tags     = local.tags
   resourceGroupName = azurerm_resource_group.rg.name
@@ -232,10 +232,10 @@ module "openaiServices" {
 module "formrecognizer" {
   source = "./core/ai/docintelligence"
 
-  name     = "infoasst-fr-${random_string.random.result}"
+  name     = "infoasst-fr-${var.randostring}"
   location = var.location
   tags     = local.tags
-  customSubDomainName = "infoasst-fr-${random_string.random.result}"
+  customSubDomainName = "infoasst-fr-${var.randostring}"
   resourceGroupName = azurerm_resource_group.rg.name
   keyVaultId = module.kvModule.keyVaultId 
   depends_on = [
@@ -246,7 +246,7 @@ module "formrecognizer" {
 module "cognitiveServices" {
   source = "./core/ai/cogServices"
 
-  name     = "infoasst-enrichment-cog-${random_string.random.result}"
+  name     = "infoasst-enrichment-cog-${var.randostring}"
   location = var.location 
   tags     = local.tags
   keyVaultId = module.kvModule.keyVaultId 
@@ -259,7 +259,7 @@ module "cognitiveServices" {
 module "searchServices" {
   source = "./core/search"
 
-  name     = var.searchServicesName != "" ? var.searchServicesName : "infoasst-search-${random_string.random.result}"
+  name     = var.searchServicesName != "" ? var.searchServicesName : "infoasst-search-${var.randostring}"
   location = var.location
   tags     = local.tags
   # aad_auth_failure_mode = "http401WithBearerChallenge"
@@ -277,7 +277,7 @@ module "searchServices" {
 module "cosmosdb" {
   source = "./core/db"
 
-  name                = "infoasst-cosmos-${random_string.random.result}"
+  name                = "infoasst-cosmos-${var.randostring}"
   location            = var.location
   tags                = local.tags
   logDatabaseName   = "statusdb"
@@ -295,12 +295,12 @@ module "cosmosdb" {
 module "functions" { 
   source = "./core/host/functions"
 
-  name                                  = var.functionsAppName != "" ? var.functionsAppName : "infoasst-func-${random_string.random.result}"
+  name                                  = var.functionsAppName != "" ? var.functionsAppName : "infoasst-func-${var.randostring}"
   location                              = var.location
   tags                                  = local.tags
   keyVaultUri                           = module.kvModule.keyVaultUri
   keyVaultName                          = module.kvModule.keyVaultName 
-  plan_name                             = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-func-asp-${random_string.random.result}"
+  plan_name                             = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-func-asp-${var.randostring}"
   sku                                   = {
     size                                = var.functionsAppSkuSize
     tier                                = var.functionsAppSkuTier
@@ -367,7 +367,7 @@ module "sharepoint" {
   subscription_id                     = data.azurerm_client_config.current.subscription_id
   storage_account_name                = module.storage.name
   storage_access_key                  = module.storage.storage_account_access_key
-  random_string                       = random_string.random.result
+  random_string                       = var.randostring
   tags                                = local.tags
 
   depends_on = [
@@ -381,7 +381,7 @@ module "video_indexer" {
   location                            = azurerm_resource_group.rg.location
   resource_group_name                 = azurerm_resource_group.rg.name
   subscription_id                     = data.azurerm_client_config.current.subscription_id
-  random_string                       = random_string.random.result
+  random_string                       = var.randostring
   tags                                = local.tags
   azuread_service_principal_object_id = module.entraObjects.azure_ad_web_app_client_id
   arm_template_schema_mgmt_api        = var.arm_template_schema_mgmt_api
@@ -480,14 +480,14 @@ module "azMonitor" {
   source            = "./core/logging/monitor"
   logAnalyticsName  = module.logging.logAnalyticsName
   location          = var.location
-  logWorkbookName   = "infoasst-lw-${random_string.random.result}"
+  logWorkbookName   = "infoasst-lw-${var.randostring}"
   resourceGroupName = azurerm_resource_group.rg.name 
   componentResource = "/subscriptions/${var.subscriptionId}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.OperationalInsights/workspaces/${module.logging.logAnalyticsName}"
 }
 
 module "kvModule" {
   source            = "./core/security/keyvault" 
-  name              = "infoasst-kv-${random_string.random.result}"
+  name              = "infoasst-kv-${var.randostring}"
   location          = var.location
   kvAccessObjectId  = data.azurerm_client_config.current.object_id 
   spClientSecret    = module.entraObjects.azure_ad_mgmt_app_secret 
@@ -499,7 +499,7 @@ module "kvModule" {
 
 module "bingSearch" {
   source                        = "./core/ai/bingSearch"
-  name                          = "infoasst-bing-${random_string.random.result}"
+  name                          = "infoasst-bing-${var.randostring}"
   resourceGroupName             = azurerm_resource_group.rg.name
   tags                          = local.tags
   sku                           = "S1" //supported SKUs can be found at https://www.microsoft.com/en-us/bing/apis/pricing

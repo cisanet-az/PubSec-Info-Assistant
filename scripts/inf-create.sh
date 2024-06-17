@@ -62,11 +62,11 @@ fi
 
 #If you are unable to obtain the permission at the tenant level described in Azure account requirements, you can set the following to true provided you have created Azure AD App Registrations. 
 
-#export TF_VAR_isInAutomation=true
-#export TF_VAR_aadWebClientId=""
-#export TF_VAR_aadMgmtClientId=""
-#export TF_VAR_aadMgmtServicePrincipalId=""
-#export TF_VAR_aadMgmtClientSecret=""
+export TF_VAR_isInAutomation=true
+export TF_VAR_aadWebClientId="2abd0771-a0d0-49a2-a7bd-fc37649266c8"
+export TF_VAR_aadMgmtClientId="be2b0c57-4b19-4539-a7b6-4394316a8ff3"
+export TF_VAR_aadMgmtServicePrincipalId="ec0ae2cb-d12e-4dda-94fe-3298bca33550"
+export TF_VAR_aadMgmtClientSecret="380ed39d-20f4-4c29-8eb0-e82a12097724"
 
 
 # prepare vars for the users you wish to assign to the security group

@@ -519,3 +519,8 @@ variable "password_lifetime" {
   default = 365
   description = "The number of days used as the lifetime for passwords"  
 }
+
+variable "randostring" {
+  type = string
+  default = "snkye"
+}
